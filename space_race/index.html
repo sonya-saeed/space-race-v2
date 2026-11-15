@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080B4F">
+  <title>SPACE RACE — Astrolympics</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Space Race home">SPACE RACE<span>ASTROLYMPICS</span></a>
+      <div class="top-actions">
+        <span class="save-state">● LOCAL SAVE ON</span>
+        <button class="small-button" id="soundToggle" type="button" aria-pressed="false">SOUND: OFF</button>
+      </div>
+    </header>
+
+    <section id="homeScreen" class="screen home-screen">
+      <div class="hero">
+        <div class="eyebrow">COGNITIVE PERFORMANCE // FLIGHT SIMULATOR</div>
+        <h1>THINK FAST.<br><span>FLY SMART.</span></h1>
+        <p class="intro">Navigate the asteroid field. When your route is blocked, prove your skills across five cognitive domains.</p>
+        <div class="home-actions">
+          <button class="primary-button" id="startButton">▶ START FLIGHT</button>
+          <button class="secondary-button" id="joinButton">JOIN A CREW</button>
+        </div>
+        <div class="pilot-card">
+          <div><span class="muted">LAST PILOT</span><strong id="pilotNameDisplay">SPACE CADET</strong></div>
+          <div><span class="muted">TOTAL XP</span><strong id="homeXp">0 XP</strong></div>
+          <div><span class="muted">BEST ACCURACY</span><strong id="homeBest">—</strong></div>
+        </div>
+      </div>
+      <aside class="side-panel">
+        <div class="panel-label">MISSION BRIEFING</div>
+        <div class="domain-list">
+          <div><i class="dot purple"></i><span>ATTENTION</span><small>Focus & filtering</small></div>
+          <div><i class="dot blue"></i><span>MEMORY</span><small>Recall & sequences</small></div>
+          <div><i class="dot cyan"></i><span>VISUOSPATIAL</span><small>Patterns & rotation</small></div>
+          <div><i class="dot pink"></i><span>LANGUAGE</span><small>Words & meaning</small></div>
+          <div><i class="dot navy"></i><span>REASONING</span><small>Logic & inference</small></div>
+        </div>
+        <div class="brief-note">Your finishing position is not the whole story. Your score rewards correct answers and efficient performance.</div>
+        <button class="text-button" id="howButton">HOW SCORING WORKS ↗</button>
+      </aside>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen hidden">
+      <div class="game-heading">
+        <div><div class="eyebrow">MISSION IN PROGRESS</div><h2>ASTEROID RUN</h2><p class="pilot-line">PILOT: <strong id="matchPilot">—</strong></p></div>
+        <div class="hud">
+          <div><small>TIME</small><strong id="timeHud">00:00</strong></div>
+          <div><small>XP</small><strong id="xpHud">100</strong></div>
+          <div><small>QUESTIONS</small><strong id="questionHud">0/5</strong></div>
+        </div>
+      </div>
+      <div class="game-wrap">
+        <canvas id="gameCanvas" width="900" height="520" aria-label="Spaceship asteroid game"></canvas>
+        <div class="game-overlay hidden" id="pauseOverlay">
+          <div class="overlay-card"><div class="eyebrow">FLIGHT PAUSED</div><h2>ROUTE OBSTRUCTED</h2><p>Complete the cognitive challenge to clear your flight path.</p></div>
+        </div>
+      </div>
+      <div class="game-controls">
+        <div class="control-hint"><b>↑ ↓ ← →</b> or <b>W A S D</b> to steer</div>
+        <div class="touch-controls">
+          <button data-dir="up" aria-label="Move up">▲</button>
+          <div><button data-dir="left" aria-label="Move left">◀</button><button data-dir="down" aria-label="Move down">▼</button><button data-dir="right" aria-label="Move right">▶</button></div>
+        </div>
+        <button class="secondary-button" id="endFlightButton">END FLIGHT</button>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen result-screen hidden">
+      <div class="result-card">
+        <div class="eyebrow">MISSION REPORT // <span id="resultPilot">PILOT</span></div>
+        <h2>FLIGHT COMPLETE</h2>
+        <div class="result-stats">
+          <div><small>ACCURACY</small><strong id="resultAccuracy">0%</strong></div>
+          <div><small>CORRECT</small><strong id="resultCorrect">0/0</strong></div>
+          <div><small>TIME</small><strong id="resultTime">00:00</strong></div>
+          <div><small>XP EARNED</small><strong id="resultXp">0</strong></div>
+        </div>
+        <p id="resultMessage">Every mission is a chance to learn.</p>
+        <div class="result-actions">
+          <button class="primary-button" id="againButton">▶ PLAY ANOTHER MATCH</button>
+          <button class="secondary-button" id="homeButton">BACK TO BASE</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>SPACE RACE · ASTROLYMPICS <span>BUILT FOR THE WEB</span></footer>
+  </main>
+
+  <dialog id="nameDialog" class="modal">
+    <form id="nameForm" method="dialog">
+      <div class="eyebrow">NEW MATCH // PILOT REGISTRATION</div>
+      <h2>WHO'S FLYING?</h2>
+      <p>Choose the display name your crew will see for this match.</p>
+      <label for="displayName">DISPLAY NAME</label>
+      <input id="displayName" name="displayName" maxlength="18" minlength="1" autocomplete="nickname" placeholder="e.g. STAR PILOT" required>
+      <div class="modal-actions">
+        <button class="secondary-button" type="button" id="cancelName">CANCEL</button>
+        <button class="primary-button" type="submit">CONFIRM & LAUNCH</button>
+      </div>
+      <small>Your last name is remembered on this device to make the next match quicker. You can change it every time.</small>
+    </form>
+  </dialog>
+
+  <dialog id="questionDialog" class="modal question-modal">
+    <form id="answerForm" method="dialog">
+      <div class="eyebrow" id="questionDomain">COGNITIVE CHECK</div>
+      <h2 id="questionTitle">FLIGHT CHECK</h2>
+      <p id="questionText"></p>
+      <div id="answerChoices" class="answer-choices"></div>
+      <div id="answerFeedback" class="feedback" aria-live="polite"></div>
+      <button class="primary-button" id="submitAnswer" type="submit" disabled>SUBMIT ANSWER</button>
+    </form>
+  </dialog>
+
+  <dialog id="infoDialog" class="modal">
+    <div class="eyebrow">SCORING PROTOCOL</div>
+    <h2>SKILL OVER SPEED</h2>
+    <p>Every flight starts with 100 XP. Each correct answer adds 25 XP, and each incorrect answer deducts 20 XP. Your mission report shows accuracy, correct answers, total time and final XP.</p>
+    <p>This prototype stores personal XP and your last display name in this browser only. Crew rooms use PeerJS peer-to-peer connections; the host must keep the game open for the party to remain active. Multiplayer has not been load-tested across devices.</p>
+    <p>These are game-based cognitive challenges, not clinically validated screening tests or medical advice.</p>
+    <button class="primary-button" id="closeInfo">GOT IT</button>
+  </dialog>
+
+  <dialog id="joinDialog" class="modal">
+    <form id="joinForm" method="dialog">
+      <div class="eyebrow">CREW LINK</div>
+      <h2>JOIN A CREW</h2>
+      <p>Paste a crew invite code or party link. The host must keep their game open while the party is active.</p>
+      <label for="crewCode">PARTY LINK OR CODE</label>
+      <input id="crewCode" placeholder="Paste invite link or code">
+      <div class="modal-actions">
+        <button class="secondary-button" type="button" id="cancelJoin">CANCEL</button>
+        <button class="primary-button" type="submit">JOIN CREW</button>
+      </div>
+      <small id="joinFeedback"></small>
+    </form>
+  </dialog>
+
+  <script src="game.js"></script>
+</body>
+</html>
